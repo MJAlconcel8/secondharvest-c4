@@ -1,56 +1,90 @@
-import React, { useState } from 'react'
-import Button from '../../components/Button/Button'
-import './AuthScreen.scss'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from '../../components/Button/Button';
+import ErrorModal from '../../components/ErrorModal/ErrorModal';
+import './AuthScreen.scss';
+
 
 const AuthScreen = () => {
-    const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(true);
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [message, setMessage] = useState('');
+  const [modal, setModal] = useState({ show: false, message: '' });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        username : '',
-        email: '',
-        password:'',
-        confirmPassword: ''
-    });
+  const handleFormChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const [message, setMessage] = useState('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setLoading(true);
 
-    const handleFormChange = (e) => {
-        setFormData({...formData, [e.target.name]: e.target.value});
+    // Slow down loader for environmental effect
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Sign Up: Email must have @
+    if (!isLogin && !formData.email.includes('@')) {
+      setModal({ show: true, message: 'Email Address does not have @' });
+      setLoading(false);
+      return;
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMessage('');
+    // Sign Up: Passwords must match
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      setModal({ show: true, message: 'Password does not match Confirm Password' });
+      setLoading(false);
+      return;
+    }
 
-        if(!isLogin && formData.password !== formData.confirmPassword){
-            setMessage('Passwords do not match');
+    const endPoint = isLogin ? '/api/user/login' : '/api/user/register';
+
+    try {
+      const response = await fetch(`http://localhost:5000${endPoint}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
+        setTimeout(() => {
+          setLoading(false);
+          navigate('/');
+        }, 800);
+      } else {
+        // Login: Incorrect user name or password
+        if (isLogin && (data.error || '').toLowerCase().includes('incorrect')) {
+          setModal({ show: true, message: 'Incorrect user name or password' });
+        } else {
+          setModal({ show: true, message: data.error || 'An error occurred' });
         }
-
-        const endPoint = isLogin ? '/api/user/login' : '/api/user/register';
-
-        try{
-            const response = await fetch(`http://localhost:5000${endPoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await response.json();
-
-            if(response.ok){
-                setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
-            } else {
-                setMessage(data.error || 'An error occurred');
-            }
-        } catch (err) {
-            setMessage('An error occurred while connecting to the server');
-        }
-    };
+        setMessage(data.error || 'An error occurred');
+        setLoading(false);
+      }
+    } catch {
+      setModal({ show: true, message: 'An error occurred while connecting to the server' });
+      setMessage('An error occurred while connecting to the server');
+      setLoading(false);
+    }
+  };
 
 
   return (
+    <>
+    <ErrorModal show={modal.show} message={modal.message} onClose={() => setModal({ show: false, message: '' })} />
     <div className="auth-container">
       <div className="auth-card">
         
@@ -119,8 +153,18 @@ const AuthScreen = () => {
               </div>
             )}
 
-            <Button type="submit" className="submit-btn">
-              {isLogin ? "Log In" : "Create Account"}
+            <Button type="submit" className="submit-btn" onClick={() => navigate("/home")}>
+              {loading ? (
+                <span className="env-loader">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#388E3C" strokeWidth="4" fill="#C8E6C9" />
+                    <path d="M12 2a10 10 0 0 1 10 10" stroke="#388E3C" strokeWidth="4" strokeLinecap="round" />
+                  </svg>
+                  <span style={{ marginLeft: '8px' }}>Loading...</span>
+                </span>
+              ) : (
+                isLogin ? "Log In" : "Create Account"
+              )}
             </Button>
           </form>
 
@@ -133,6 +177,7 @@ const AuthScreen = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

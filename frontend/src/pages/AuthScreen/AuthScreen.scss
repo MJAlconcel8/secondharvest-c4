@@ -17,7 +17,7 @@ $border-color: #d1d1d1;
     display: flex;
     width: 100%;
     max-width: 900px;
-    height: 600px;
+    height: 720px;
     background: white;
     border-radius: 12px;
     overflow: hidden;
@@ -58,6 +58,7 @@ $border-color: #d1d1d1;
     // Right Side: Form Panel
     .form-panel {
       flex: 1;
+      min-height: 600px;
       padding: 3rem;
       background-color: $input-bg;
       display: flex;

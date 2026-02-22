@@ -1,0 +1,123 @@
+// Variables for that "Earth" aesthetic
+$primary-green: #344e41;
+$bg-cream: #f9f5f0;
+$input-bg: #faf7f2;
+$text-dark: #2d3e2f;
+$border-color: #d1d1d1;
+
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-cream;
+  font-family: 'Inter', sans-serif;
+
+  .auth-card {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    height: 600px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+    // Left Side: Image Panel
+    .hero-panel {
+      flex: 1;
+      position: relative;
+      display: none; // Hidden on mobile
+      
+      @media (min-width: 768px) { display: block; }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.8);
+      }
+
+      .hero-content {
+        position: absolute;
+        inset: 0;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: white;
+
+        h1 {
+          font-family: 'Playfair Display', serif;
+          font-size: 2.5rem;
+          margin-bottom: 1rem;
+        }
+      }
+    }
+
+    // Right Side: Form Panel
+    .form-panel {
+      flex: 1;
+      padding: 3rem;
+      background-color: $input-bg;
+      display: flex;
+      flex-direction: column;
+
+      h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        color: $text-dark;
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+        
+        label {
+          display: block;
+          font-size: 0.8rem;
+          margin-bottom: 0.4rem;
+          color: #666;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.8rem;
+          border: 1px solid $border-color;
+          border-radius: 6px;
+          background: transparent;
+        }
+      }
+
+      .submit-btn {
+        width: 100%;
+        background-color: $primary-green;
+        color: white;
+        padding: 1rem;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        margin-top: 1.5rem;
+        font-weight: 600;
+        transition: opacity 0.2s;
+
+        &:hover { opacity: 0.9; }
+      }
+
+      .toggle-text {
+        text-align: center;
+        margin-top: auto;
+        font-size: 0.9rem;
+
+        button {
+          background: none;
+          border: none;
+          text-decoration: underline;
+          font-weight: bold;
+          cursor: pointer;
+          color: $text-dark;
+        }
+      }
+    }
+  }
+}

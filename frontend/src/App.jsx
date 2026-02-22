@@ -1,9 +1,10 @@
-import './App.scss'
 
+import React from 'react'
+import AuthScreen from './pages/AuthScreen/AuthScreen'
 function App() {
   return (
     <div className="container">
-      <h1>Hello Vite + React + SCSS 🚀</h1>
+      <AuthScreen />
     </div>
   )
 }

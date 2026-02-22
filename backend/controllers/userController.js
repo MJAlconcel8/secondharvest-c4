@@ -36,65 +36,7 @@ const loginUser = async (req, res) => {
     }
 };
 
-const getUserById = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-
-        if (user.rows.length > 0) {
-            res.json(user.rows[0]);
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};  
-
-const updateUser = async (req, res) => {
-    const { id } = req.params;
-    const { username, email, password } = req.body;
-
-    try {
-        const updatedUser = await pool.query(
-            'UPDATE users SET username = $1, email = $2, password = $3 WHERE id = $4 RETURNING *',
-            [username, email, password, id]
-        );
-
-        if (updatedUser.rows.length > 0) {
-            res.json(updatedUser.rows[0]);
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
-
-const deleteUser = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const deletedUser = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
-        
-        if (deletedUser.rows.length > 0) {
-            res.json(deletedUser.rows[0]);
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}       
-
 module.exports = {
     registerUser,
-    loginUser,
-    getUserById,
-    updateUser,
-    deleteUser
+    loginUser
 };

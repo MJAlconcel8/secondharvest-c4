@@ -1,0 +1,74 @@
+
+.meet-team-card {
+  background: #ff8a80;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 0;
+  color: #fff;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  max-width: 370px;
+  min-width: 260px;
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1.5px solid #ffd6d6;
+}
+
+
+.meet-team-card .team-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: #ff8a80;
+  padding: 1.2rem 1.2rem 0.7rem 1.2rem;
+  border-bottom: 1px solid #ffd6d6;
+}
+
+
+.meet-team-card .team-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+
+.meet-team-card .team-member-name {
+  font-size: 1.18rem;
+  font-weight: 600;
+  margin: 0;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+
+.meet-team-card .team-member-role {
+  font-size: 0.98rem;
+  font-weight: 400;
+  margin: 0;
+  color: #ffe0e6;
+  opacity: 0.95;
+}
+
+
+.meet-team-card .team-member-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid #fff;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+
+.meet-team-card .team-member-description {
+  font-size: 1.01rem;
+  color: #fff;
+  opacity: 0.97;
+  margin: 0;
+  padding: 1.1rem 1.2rem 1.3rem 1.2rem;
+  line-height: 1.55;
+  background: transparent;
+}

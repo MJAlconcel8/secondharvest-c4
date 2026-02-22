@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AuthScreen from './pages/AuthScreen/AuthScreen';
 import Home from './pages/Home/Home';
+import MeetTheTeam from './pages/MeetTheTeam/MeetTheTeam';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<AuthScreen />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/meettheteam" element={<MeetTheTeam />} />
         </Routes>
       </div>
     </Router>

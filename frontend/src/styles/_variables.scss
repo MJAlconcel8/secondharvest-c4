@@ -1,0 +1,35 @@
+// src/styles/_variables.scss
+
+// Color palette
+$primary-color: #344e41;
+$secondary-color: #2d3e2f;
+$accent-color: #244a2f;
+$success-color: #6fc13e;
+$background-color: #f9f5f0;
+$brand-bg: #fdfaf2;
+
+// Font families
+$font-main: 'Inter', sans-serif;
+$font-brand: 'Playfair Display', serif;
+
+// Font sizes
+$font-size-base: 1.2rem;
+$font-size-lg: 2.2rem;
+$font-size-sm: 1.2rem;
+
+// Font weights
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+// Border radius
+$border-radius: 6px;
+
+// Spacing
+$spacing-xs: 0.2rem;
+$spacing-sm: 0.3rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+
+// Shadows
+$box-shadow-navbar: 0 2px 8px rgba(0,0,0,0.05);
+$box-shadow-login: 0 1px 4px rgba(36,74,47,0.08);

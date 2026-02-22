@@ -62,12 +62,14 @@ const AuthScreen = () => {
         setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
         setTimeout(() => {
           setLoading(false);
-          navigate('/');
+          navigate('/home');
         }, 800);
       } else {
         // Login: Incorrect user name or password
         if (isLogin && (data.error || '').toLowerCase().includes('incorrect')) {
           setModal({ show: true, message: 'Incorrect user name or password' });
+        } else if (!isLogin && (data.error || '').toLowerCase().includes('email')) {
+          setModal({ show: true, message: 'Email is already registered. Please use a different email.' });
         } else {
           setModal({ show: true, message: data.error || 'An error occurred' });
         }
@@ -153,7 +155,7 @@ const AuthScreen = () => {
               </div>
             )}
 
-            <Button type="submit" className="submit-btn" onClick={() => navigate("/home")}>
+            <Button type="submit" className="submit-btn">
               {loading ? (
                 <span className="env-loader">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

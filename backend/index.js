@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./config/userConfig');
 const userRoutes = require('./routes/userRoutes');
+const eventsRoutes = require('./routes/eventsRoutes');
 
 const app = express();
 
@@ -20,6 +21,7 @@ pool.query('SELECT NOW()', (err, res) => {
 
 // Routes
 app.use('/api/user', userRoutes);
+app.use('/api/events', eventsRoutes);
 
 app.listen(5000, () => {
     console.log('Server is running on port 5000');

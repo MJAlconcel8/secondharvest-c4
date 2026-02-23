@@ -32,7 +32,7 @@ const SecondHarvest = () => {
           </p>
       
       <div className="gallery-section">
-        <h2>Highlights As a Team</h2>
+        <h2>Everyone Loves Second Harvest</h2>
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           navigation
@@ -61,19 +61,19 @@ const SecondHarvest = () => {
 const itemData = [
   {
     img: SecondHarvest1,
-    title: 'Community',
+    title: 'Abundance',
   },
   {
     img: SecondHarvest2,
-    title: 'Team Building',
+    title: 'Distribution',
   },
   {
     img: SecondHarvest3,
-    title: 'Origin',
+    title: 'Community',
   },
     {
     img: SecondHarvest4,
-    title: 'Volunteering',
+    title: 'Contribution',
   },
 
 ];

@@ -50,7 +50,7 @@ const Navbar = () => {
         <NavLink to="/calendar" className={({ isActive }) => `navbar__link${isActive ? ' active' : ''}`} onClick={handleClose}>Calendar</NavLink>
       </div>
       <div className="navbar__right">
-        <NavLink to="/auth" className="navbar__logout" onClick={handleClose} title="Log Out">
+        <NavLink to="/" className="navbar__logout" onClick={handleClose} title="Log Out">
           <img src={logoutIcon} alt="Log Out" className="navbar__logout-icon" />
         </NavLink>
       </div>

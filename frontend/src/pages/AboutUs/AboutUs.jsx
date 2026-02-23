@@ -31,7 +31,7 @@ const AboutUs = () => {
           </p>
       
       <div className="gallery-section">
-        <h2>Our Impact</h2>
+        <h2>Highlights As a Team</h2>
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           navigation

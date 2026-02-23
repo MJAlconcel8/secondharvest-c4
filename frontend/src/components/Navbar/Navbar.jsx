@@ -42,7 +42,7 @@ const Navbar = () => {
         </button>
       </div>
       <div className={`navbar__center ${navOpen ? 'navbar__center--open' : ''}`}> 
-        <NavLink to="/" end className={({ isActive }) => `navbar__link${isActive ? ' active' : ''}`} onClick={handleClose}>Home</NavLink>
+        <NavLink to="/home" end className={({ isActive }) => `navbar__link${isActive ? ' active' : ''}`} onClick={handleClose}>Home</NavLink>
         <NavLink to="/secondharvest" className={({ isActive }) => `navbar__link${isActive ? ' active' : ''}`} onClick={handleClose}>Second Harvest</NavLink>
         <NavLink to="/aboutus" className={({ isActive }) => `navbar__link${isActive ? ' active' : ''}`} onClick={handleClose}>About Us</NavLink>
         <NavLink to="/meettheteam" className={({ isActive }) => `navbar__link${isActive ? ' active' : ''}`} onClick={handleClose}>Meet the Team</NavLink>

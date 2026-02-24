@@ -52,15 +52,17 @@
   }
 
   .event-form {
-    padding: 2rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+    max-height: calc(90vh - 100px);
+    overflow-y: auto;
   }
 
   .image-preview-section {
     width: 100%;
-    height: 200px;
+    height: 120px;
     border-radius: 8px;
     overflow: hidden;
     background: #f0f0f0;
@@ -76,7 +78,7 @@
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.4rem;
 
     label {
       font-size: 0.95rem;
@@ -139,7 +141,7 @@
 
     textarea {
       resize: vertical;
-      min-height: 100px;
+      min-height: 70px;
     }
 
     .file-upload-wrapper {
@@ -191,7 +193,9 @@
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
 
     .btn {
       padding: 0.8rem 1.5rem;

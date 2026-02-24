@@ -276,7 +276,7 @@ const Events = () => {
       <Navbar />
       <h1 className="events-title">Upcoming Events</h1>
       <p>Youth Enlightened empowers young people to create positive change in their communities through education, advocacy, and action. We host engaging workshops and events focused on real world issues like food insecurity, and we also encourage youth to step up and host their own workshops and initiatives to make an impact.</p>
-      <p>In partnership with Second Harvest, we raise awareness about food insecurity while helping students build practical skills such as coding, finance, marketing, and graphic design that they can use to advocate for solutions and support their communities.</p>
+      <p>In partnership with YouthEnlightened, we raise awareness about food insecurity while helping students build practical skills such as coding, finance, marketing, and graphic design that they can use to advocate for solutions and support their communities.</p>
       {error && <div className="error-message">{error}</div>}
       {loading ? (
         <div className="loading-message">Loading events...</div>

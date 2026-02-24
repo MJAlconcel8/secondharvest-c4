@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import './Navbar.scss';
 import { NavLink, } from 'react-router-dom';
-import logo from '../../assets/second-harvest-logo.png';
+import logo from '../../assets/YouthEnlightened.svg';
 import logoutIcon from '../../assets/logout.png';
 
 const Navbar = () => {

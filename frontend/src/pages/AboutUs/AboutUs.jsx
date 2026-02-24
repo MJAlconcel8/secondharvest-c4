@@ -18,7 +18,7 @@ const AboutUs = () => {
         <h1>About Us</h1>
          <h2>Our Story</h2>
           <p>
-            Our story begins with C4 at York University, a space where we are challenged to build projects that go beyond the classroom and create meaningful impact in the community. It was through C4 workshops and discussions that we were first introduced to the depth and urgency of food insecurity in Canada. What began as research quickly became personal when we visited Second Harvest’s warehouse.
+            Our story begins with C4 at York University, a space where we are challenged to build projects that go beyond the classroom and create meaningful impact in the community. It was through C4 workshops and discussions that we were first introduced to the depth and urgency of food insecurity in Canada. What began as research quickly became personal when we visited YouthEnlightened's warehouse.
           </p>
           <p>
             During our site visit, we witnessed firsthand how surplus food is rescued and redistributed to community organizations serving individuals experiencing food insecurity. After learning about the staggering amount of edible food wasted across the country, we stepped into the warehouse to take part in the process ourselves, sorting industrial bins of carrots and potatoes, carefully weighing five pound bags, and preparing them for distribution. What seemed simple at first revealed the scale, coordination, and labour required to keep food from going to waste.

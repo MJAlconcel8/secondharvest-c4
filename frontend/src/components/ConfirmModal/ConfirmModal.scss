@@ -1,0 +1,79 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  min-width: 320px;
+  max-width: 420px;
+}
+
+.modal-title {
+  margin: 0 0 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.modal-message {
+  margin: 0;
+  font-size: 0.98rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.modal-actions.single-action {
+  gap: 0;
+}
+
+.modal-actions .btn {
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.modal-actions .btn-primary {
+  background: #7bb661;
+  color: #fff;
+}
+
+.modal-actions .btn-primary:hover {
+  background: #6aa850;
+}
+
+.modal-actions .btn-secondary {
+  background: #f0f0f0;
+  color: #111;
+}
+
+.modal-actions .btn-secondary:hover {
+  background: #e8e8e8;
+}
+
+.modal-actions .btn:active {
+  transform: scale(0.98);
+}

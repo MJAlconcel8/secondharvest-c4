@@ -56,6 +56,18 @@
     letter-spacing: 0.01em;
   }
 
+  .event-card-type {
+    align-self: flex-start;
+    background: rgba(123, 182, 97, 0.18);
+    color: #2f5f2a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+
   .event-card-description {
     font-size: 1.01rem;
     color: #111;

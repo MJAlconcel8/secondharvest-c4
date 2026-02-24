@@ -12,7 +12,6 @@ CREATE TABLE events (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     event_name VARCHAR(255) NOT NULL,
-    event_image TEXT,
     event_type VARCHAR(80) NOT NULL,
     description TEXT NOT NULL,
     host_name VARCHAR(255) NOT NULL,

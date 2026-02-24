@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import ErrorModal from '../../components/ErrorModal/ErrorModal';
+import { userService } from '../../services/userService';
 import './AuthScreen.scss';
 
 
@@ -44,41 +45,45 @@ const AuthScreen = () => {
       return;
     }
 
-    const endPoint = isLogin ? '/api/user/login' : '/api/user/register';
-
     try {
-      const response = await fetch(`http://localhost:5000${endPoint}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
-        setTimeout(() => {
-          setLoading(false);
-          navigate('/home');
-        }, 800);
+      let data;
+      if (isLogin) {
+        data = await userService.loginUser({
+          email: formData.email,
+          password: formData.password
+        });
       } else {
-        // Login: Incorrect user name or password
-        if (isLogin && (data.error || '').toLowerCase().includes('incorrect')) {
-          setModal({ show: true, message: 'Incorrect user name or password' });
-        } else if (!isLogin && (data.error || '').toLowerCase().includes('email')) {
-          setModal({ show: true, message: 'Email is already registered. Please use a different email.' });
-        } else {
-          setModal({ show: true, message: data.error || 'An error occurred' });
-        }
-        setMessage(data.error || 'An error occurred');
-        setLoading(false);
+        data = await userService.registerUser({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password
+        });
       }
-    } catch {
-      setModal({ show: true, message: 'An error occurred while connecting to the server' });
-      setMessage('An error occurred while connecting to the server');
+
+      // Store user data in localStorage
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('token', data.token);
+        if (data.refreshToken) {
+          localStorage.setItem('refreshToken', data.refreshToken);
+        }
+      }
+      setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
+      setTimeout(() => {
+        setLoading(false);
+        navigate('/home');
+      }, 800);
+    } catch (error) {
+      const errorMessage = error.message || 'An error occurred';
+      // Login: Incorrect user name or password
+      if (isLogin && errorMessage.toLowerCase().includes('incorrect')) {
+        setModal({ show: true, message: 'Incorrect user name or password' });
+      } else if (!isLogin && errorMessage.toLowerCase().includes('email')) {
+        setModal({ show: true, message: 'Email is already registered. Please use a different email.' });
+      } else {
+        setModal({ show: true, message: errorMessage });
+      }
+      setMessage(errorMessage);
       setLoading(false);
     }
   };

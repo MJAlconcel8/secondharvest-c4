@@ -1,23 +1,22 @@
 const pool = require('../config/userConfig');
 
 const createEvent = async (req, res) => {
-    const { userId, eventName, eventImage, eventType, description, hostName, eventDate } = req.body;
+    const { userId, eventName, eventType, description, hostName, eventDate } = req.body;
 
     try {
         const newEvent = await pool.query(
-                        `INSERT INTO events (user_id, event_name, event_image, event_type, description, host_name, event_date)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7)
+                        `INSERT INTO events (user_id, event_name, event_type, description, host_name, event_date)
+                         VALUES ($1, $2, $3, $4, $5, $6)
              RETURNING
                id,
-                             user_id AS "userId",
+               user_id AS "userId",
                event_name AS "eventName",
-               event_image AS "eventImage",
                event_type AS "eventType",
                description,
                host_name AS "hostName",
                event_date AS "eventDate",
                created_at AS "createdAt"`,
-                        [userId, eventName, eventImage, eventType, description, hostName, eventDate]
+                        [userId, eventName, eventType, description, hostName, eventDate]
         );
 
         res.json(newEvent.rows[0]);
@@ -34,7 +33,6 @@ const getEvents = async (req, res) => {
                id,
                user_id AS "userId",
                event_name AS "eventName",
-               event_image AS "eventImage",
                event_type AS "eventType",
                description,
                host_name AS "hostName",
@@ -59,7 +57,6 @@ const getEventById = async (req, res) => {
                id,
                user_id AS "userId",
                event_name AS "eventName",
-               event_image AS "eventImage",
                event_type AS "eventType",
                description,
                host_name AS "hostName",
@@ -83,30 +80,28 @@ const getEventById = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     const { id } = req.params;
-    const { userId, eventName, eventImage, eventType, description, hostName, eventDate } = req.body;
+    const { userId, eventName, eventType, description, hostName, eventDate } = req.body;
 
     try {
         const updatedEvent = await pool.query(
             `UPDATE events
              SET user_id = $1,
                  event_name = $2,
-                 event_image = $3,
-                 event_type = $4,
-                 description = $5,
-                 host_name = $6,
-                 event_date = $7
-             WHERE id = $8
+                 event_type = $3,
+                 description = $4,
+                 host_name = $5,
+                 event_date = $6
+             WHERE id = $7
              RETURNING
                id,
                user_id AS "userId",
                event_name AS "eventName",
-               event_image AS "eventImage",
                event_type AS "eventType",
                description,
                host_name AS "hostName",
                event_date AS "eventDate",
                created_at AS "createdAt"`,
-            [userId, eventName, eventImage, eventType, description, hostName, eventDate, id]
+            [userId, eventName, eventType, description, hostName, eventDate, id]
         );
 
         if (updatedEvent.rows.length > 0) {

@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import EventCard from '../../components/EventCard/EventCard'
 import EventFormModal from '../../components/EventFormModal/EventFormModal'
 import EventDetailModal from '../../components/EventDetailModal/EventDetailModal'
 import EventEditModal from '../../components/EventEditModal/EventEditModal'
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal'
+import { eventService } from '../../services/eventService'
 import './Events.scss'
 
 const Events = () => {
@@ -16,7 +17,7 @@ const Events = () => {
   const [confirmType, setConfirmType] = useState(null)
   const [pendingCreateEvent, setPendingCreateEvent] = useState(null)
   const [confirmMessage, setConfirmMessage] = useState('')
-  const [eventsList, setEventsList] = useState([
+  const placeholderEvents = [
     {
       id: 1,
       eventName: 'Food Drive',
@@ -77,7 +78,37 @@ const Events = () => {
       eventDate: '2026-05-19',
       color: '#5A9D4D'
     }
-  ])
+  ]
+
+  const [eventsList, setEventsList] = useState(placeholderEvents)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  // Fetch events on component mount
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const events = await eventService.getEvents()
+        if (events && events.length > 0) {
+          // Add eventImage as empty since backend doesn't store it anymore
+          const eventsWithImages = events.map(event => ({
+            ...event,
+            eventImage: 'https://images.unsplash.com/photo-1532996122724-8f3c2cd83c5d?w=500&h=500&fit=crop',
+            color: '#7BB661'
+          }))
+          setEventsList(eventsWithImages)
+        }
+      } catch (err) {
+        console.error('Error fetching events:', err)
+        setError('Failed to load events')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchEvents()
+  }, [])
 
   const handleAddEvent = () => {
     setIsModalOpen(true)
@@ -112,12 +143,28 @@ const Events = () => {
     setIsEditModalOpen(true)
   }
 
-  const handleSubmitEditModal = (updatedEvent) => {
+  const handleSubmitEditModal = async (updatedEvent) => {
     if (updatedEvent) {
-      setEventsList(prev => prev.map(e => e.id === updatedEvent.id ? updatedEvent : e))
-      setSelectedEvent(updatedEvent)
-      setIsEditModalOpen(false)
-      setIsEditDirty(false)
+      try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        // Only send fields that the backend expects
+        const eventData = {
+          userId: user.id || 1,
+          eventName: updatedEvent.eventName,
+          eventType: updatedEvent.eventType,
+          description: updatedEvent.description,
+          hostName: updatedEvent.hostName,
+          eventDate: updatedEvent.eventDate
+        }
+        const result = await eventService.updateEvent(updatedEvent.id, eventData)
+        setEventsList(prev => prev.map(e => e.id === result.id ? { ...result, eventImage: e.eventImage, color: e.color } : e))
+        setSelectedEvent({ ...result, eventImage: updatedEvent.eventImage, color: updatedEvent.color })
+        setIsEditModalOpen(false)
+        setIsEditDirty(false)
+      } catch (err) {
+        console.error('Error updating event:', err)
+        setError('Failed to update event')
+      }
     }
   }
 
@@ -130,7 +177,7 @@ const Events = () => {
     setIsEditDirty(false)
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (confirmType === 'close-create-dirty' || confirmType === 'close-create-empty') {
       setIsModalOpen(false)
       setIsCreateDirty(false)
@@ -140,10 +187,33 @@ const Events = () => {
       setIsEditDirty(false)
     }
     if (confirmType === 'create-submit' && pendingCreateEvent) {
-      setEventsList(prev => [pendingCreateEvent, ...prev])
-      setIsModalOpen(false)
-      setIsCreateDirty(false)
-      setPendingCreateEvent(null)
+      try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        // Only send fields that the backend expects
+        const eventData = {
+          userId: user.id || 1,
+          eventName: pendingCreateEvent.eventName,
+          eventType: pendingCreateEvent.eventType,
+          description: pendingCreateEvent.description,
+          hostName: pendingCreateEvent.hostName,
+          eventDate: pendingCreateEvent.eventDate
+        }
+        const newEvent = await eventService.createEvent(eventData)
+        // Add eventImage and color since backend doesn't return them
+        const eventWithImage = {
+          ...newEvent,
+          eventImage: pendingCreateEvent.eventImage || 'https://images.unsplash.com/photo-1532996122724-8f3c2cd83c5d?w=500&h=500&fit=crop',
+          color: '#7BB661'
+        }
+        setEventsList(prev => [eventWithImage, ...prev])
+        setIsModalOpen(false)
+        setIsCreateDirty(false)
+        setPendingCreateEvent(null)
+      } catch (err) {
+        console.error('Error creating event:', err)
+        setConfirmMessage('Failed to create event. Please try again.')
+        setConfirmType('error')
+      }
     }
     setConfirmType(null)
     setConfirmMessage('')
@@ -168,6 +238,15 @@ const Events = () => {
         confirmLabel: 'Create',
         cancelLabel: 'Cancel',
         showCancel: true
+      }
+    }
+    if (confirmType === 'error') {
+      return {
+        title: 'Error',
+        message: confirmMessage || 'An error occurred',
+        confirmLabel: 'Ok',
+        cancelLabel: '',
+        showCancel: false
       }
     }
     if (confirmType === 'create-invalid') {
@@ -215,30 +294,47 @@ const Events = () => {
     }
   }
 
-  const handleDeleteEvent = (eventId) => {
-    setEventsList(prev => prev.filter(e => e.id !== eventId))
-    setSelectedEvent(null)
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      await eventService.deleteEvent(eventId)
+      setEventsList(prev => prev.filter(e => e.id !== eventId))
+      setSelectedEvent(null)
+    } catch (err) {
+      console.error('Error deleting event:', err)
+      setError('Failed to delete event')
+    }
   }
 
   return (
     <div className="events-container">
       <Navbar />
       <h1 className="events-title">Upcoming Events</h1>
-      <div className="events-grid">
-        {eventsList.map((event) => (
-          <EventCard
-            key={event.id}
-            eventName={event.eventName}
-            eventImage={event.eventImage}
-            eventType={event.eventType}
-            description={event.description}
-            hostName={event.hostName}
-            eventDate={event.eventDate}
-            color={event.color}
-            onClick={() => handleCardClick(event)}
-          />
-        ))}
-      </div>
+      {error && <div className="error-message">{error}</div>}
+      {loading ? (
+        <div className="loading-message">Loading events...</div>
+      ) : (
+        <>
+          <div className="events-grid">
+            {eventsList && eventsList.length > 0 ? (
+              eventsList.map((event) => (
+                <EventCard
+                  key={event.id}
+                  eventName={event.eventName}
+                  eventImage={event.eventImage}
+                  eventType={event.eventType}
+                  description={event.description}
+                  hostName={event.hostName}
+                  eventDate={event.eventDate}
+                  color={event.color}
+                  onClick={() => handleCardClick(event)}
+                />
+              ))
+            ) : (
+              <p className="no-events">No events found</p>
+            )}
+          </div>
+        </>
+      )}
       <button className="add-event-button" onClick={handleAddEvent}>+</button>
       {isModalOpen && (
         <div className="modal-overlay" onClick={handleRequestCloseCreate}>

@@ -22,9 +22,7 @@ const EventDetailModal = ({ event, onClose, onEdit, onDelete }) => {
   }
 
   const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete "${event.eventName}"?`)) {
-      onDelete(event.id)
-    }
+    onDelete(event.id)
   }
 
   return (

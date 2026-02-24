@@ -9,7 +9,8 @@ const ConfirmModal = ({
   cancelLabel,
   showCancel,
   onConfirm,
-  onCancel
+  onCancel,
+  isDanger
 }) => {
   if (!show) {
     return null
@@ -17,6 +18,7 @@ const ConfirmModal = ({
 
   const shouldShowCancel = showCancel !== false
   const actionsClassName = shouldShowCancel ? 'modal-actions' : 'modal-actions single-action'
+  const confirmButtonClass = isDanger ? 'btn btn-danger' : 'btn btn-primary'
 
   return (
     <div className="modal-backdrop">
@@ -29,7 +31,7 @@ const ConfirmModal = ({
               {cancelLabel || 'Cancel'}
             </button>
           )}
-          <button className="btn btn-primary" onClick={onConfirm}>
+          <button className={confirmButtonClass} onClick={onConfirm}>
             {confirmLabel || 'Confirm'}
           </button>
         </div>

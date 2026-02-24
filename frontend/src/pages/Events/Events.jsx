@@ -16,71 +16,10 @@ const Events = () => {
   const [isEditDirty, setIsEditDirty] = useState(false)
   const [confirmType, setConfirmType] = useState(null)
   const [pendingCreateEvent, setPendingCreateEvent] = useState(null)
+  const [pendingDeleteEventId, setPendingDeleteEventId] = useState(null)
   const [confirmMessage, setConfirmMessage] = useState('')
-  const placeholderEvents = [
-    {
-      id: 1,
-      eventName: 'Food Drive',
-      eventImage: 'https://images.unsplash.com/photo-1532996122724-8f3c2cd83c5d?w=500&h=500&fit=crop',
-      eventType: 'food',
-      description: 'Join us for our annual food drive to help feed families in need. Volunteers welcome!',
-      hostName: 'Second Harvest Team',
-      eventDate: '2026-03-12',
-      color: '#7BB661'
-    },
-    {
-      id: 2,
-      eventName: 'Community Harvest',
-      eventImage: 'https://images.unsplash.com/photo-1488521787991-3e169b3f44b5?w=500&h=500&fit=crop',
-      eventType: 'community',
-      description: 'Help us harvest fresh produce from our community garden and distribute to local families.',
-      hostName: 'Neighborhood Growers',
-      eventDate: '2026-03-22',
-      color: '#5A9D4D'
-    },
-    {
-      id: 3,
-      eventName: 'Cooking Workshop',
-      eventImage: 'https://images.unsplash.com/photo-1556195332-39a4ee5f1b59?w=500&h=500&fit=crop',
-      eventType: 'cooking',
-      description: 'Learn healthy cooking techniques with our expert chefs. Free for all community members.',
-      hostName: 'Chef Elena Rivera',
-      eventDate: '2026-04-05',
-      color: '#7BB661'
-    },
-    {
-      id: 4,
-      eventName: 'Donation Drive',
-      eventImage: 'https://images.unsplash.com/photo-1559027615-cd2628902d4a?w=500&h=500&fit=crop',
-      eventType: 'fundraiser',
-      description: 'Bring non-perishable items, clothing, and household goods to support our mission.',
-      hostName: 'Community Partners',
-      eventDate: '2026-04-18',
-      color: '#5A9D4D'
-    },
-    {
-      id: 5,
-      eventName: 'Volunteer Day',
-      eventImage: 'https://images.unsplash.com/photo-1559027615-cd2628902d4a?w=500&h=500&fit=crop',
-      eventType: 'community',
-      description: 'Together we can make a difference. Sign up to volunteer at our distribution center.',
-      hostName: 'Volunteer Hub',
-      eventDate: '2026-05-02',
-      color: '#7BB661'
-    },
-    {
-      id: 6,
-      eventName: 'Kids Nutrition Program',
-      eventImage: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&h=500&fit=crop',
-      eventType: 'education',
-      description: 'Fun and educational program teaching children about healthy eating habits.',
-      hostName: 'Second Harvest Educators',
-      eventDate: '2026-05-19',
-      color: '#5A9D4D'
-    }
-  ]
 
-  const [eventsList, setEventsList] = useState(placeholderEvents)
+  const [eventsList, setEventsList] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -92,13 +31,11 @@ const Events = () => {
         setError(null)
         const events = await eventService.getEvents()
         if (events && events.length > 0) {
-          // Add eventImage as empty since backend doesn't store it anymore
-          const eventsWithImages = events.map(event => ({
-            ...event,
-            eventImage: 'https://images.unsplash.com/photo-1532996122724-8f3c2cd83c5d?w=500&h=500&fit=crop',
-            color: '#7BB661'
-          }))
-          setEventsList(eventsWithImages)
+          // Deduplicate events by ID
+          const uniqueEvents = events.filter((event, index, self) =>
+            index === self.findIndex((e) => e.id === event.id)
+          )
+          setEventsList(uniqueEvents)
         }
       } catch (err) {
         console.error('Error fetching events:', err)
@@ -157,8 +94,9 @@ const Events = () => {
           eventDate: updatedEvent.eventDate
         }
         const result = await eventService.updateEvent(updatedEvent.id, eventData)
-        setEventsList(prev => prev.map(e => e.id === result.id ? { ...result, eventImage: e.eventImage, color: e.color } : e))
-        setSelectedEvent({ ...result, eventImage: updatedEvent.eventImage, color: updatedEvent.color })
+        const updatedEventWithImage = { ...result, eventImage: updatedEvent.eventImage }
+        setEventsList(prev => prev.map(e => e.id === result.id ? updatedEventWithImage : e))
+        setSelectedEvent(updatedEventWithImage)
         setIsEditModalOpen(false)
         setIsEditDirty(false)
       } catch (err) {
@@ -186,6 +124,19 @@ const Events = () => {
       setIsEditModalOpen(false)
       setIsEditDirty(false)
     }
+    if (confirmType === 'delete' && pendingDeleteEventId) {
+      try {
+        await eventService.deleteEvent(pendingDeleteEventId)
+        setEventsList(prev => prev.filter(e => e.id !== pendingDeleteEventId))
+        setSelectedEvent(null)
+        setPendingDeleteEventId(null)
+      } catch (err) {
+        console.error('Error deleting event:', err)
+        setConfirmMessage('Failed to delete event. Please try again.')
+        setConfirmType('error')
+        return
+      }
+    }
     if (confirmType === 'create-submit' && pendingCreateEvent) {
       try {
         const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -199,13 +150,15 @@ const Events = () => {
           eventDate: pendingCreateEvent.eventDate
         }
         const newEvent = await eventService.createEvent(eventData)
-        // Add eventImage and color since backend doesn't return them
         const eventWithImage = {
           ...newEvent,
-          eventImage: pendingCreateEvent.eventImage || 'https://images.unsplash.com/photo-1532996122724-8f3c2cd83c5d?w=500&h=500&fit=crop',
-          color: '#7BB661'
+          eventImage: pendingCreateEvent.eventImage
         }
-        setEventsList(prev => [eventWithImage, ...prev])
+        // Add new event and ensure no duplicates
+        setEventsList(prev => {
+          const filtered = prev.filter(e => e.id !== eventWithImage.id)
+          return [eventWithImage, ...filtered]
+        })
         setIsModalOpen(false)
         setIsCreateDirty(false)
         setPendingCreateEvent(null)
@@ -222,6 +175,7 @@ const Events = () => {
   const handleCancelConfirm = () => {
     setConfirmType(null)
     setPendingCreateEvent(null)
+    setPendingDeleteEventId(null)
     setConfirmMessage('')
   }
 
@@ -237,7 +191,8 @@ const Events = () => {
         message: `Create "${pendingCreateEvent?.eventName || 'this event'}"?`,
         confirmLabel: 'Create',
         cancelLabel: 'Cancel',
-        showCancel: true
+        showCancel: true,
+        isDanger: false
       }
     }
     if (confirmType === 'error') {
@@ -246,7 +201,8 @@ const Events = () => {
         message: confirmMessage || 'An error occurred',
         confirmLabel: 'Ok',
         cancelLabel: '',
-        showCancel: false
+        showCancel: false,
+        isDanger: false
       }
     }
     if (confirmType === 'create-invalid') {
@@ -255,7 +211,8 @@ const Events = () => {
         message: confirmMessage || 'Please fill out all required fields before creating the event.',
         confirmLabel: 'Ok',
         cancelLabel: '',
-        showCancel: false
+        showCancel: false,
+        isDanger: false
       }
     }
     if (confirmType === 'close-edit') {
@@ -264,7 +221,8 @@ const Events = () => {
         message: 'You have unsaved changes. Are you sure you want to exit the form?',
         confirmLabel: 'Discard',
         cancelLabel: 'Keep Editing',
-        showCancel: true
+        showCancel: true,
+        isDanger: false
       }
     }
     if (confirmType === 'close-create-dirty') {
@@ -273,7 +231,8 @@ const Events = () => {
         message: 'You have unsaved changes. Are you sure you want to exit the form?',
         confirmLabel: 'Discard',
         cancelLabel: 'Keep Editing',
-        showCancel: true
+        showCancel: true,
+        isDanger: false
       }
     }
     if (confirmType === 'close-create-empty') {
@@ -282,7 +241,19 @@ const Events = () => {
         message: 'Exit without creating an event?',
         confirmLabel: 'Exit',
         cancelLabel: 'Stay',
-        showCancel: true
+        showCancel: true,
+        isDanger: false
+      }
+    }
+    if (confirmType === 'delete') {
+      const eventToDelete = eventsList.find(e => e.id === pendingDeleteEventId)
+      return {
+        title: 'Delete Event',
+        message: `Are you sure you want to delete "${eventToDelete?.eventName || 'this event'}"? This action cannot be undone.`,
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        showCancel: true,
+        isDanger: true
       }
     }
     return {
@@ -290,25 +261,22 @@ const Events = () => {
       message: '',
       confirmLabel: 'Confirm',
       cancelLabel: 'Cancel',
-      showCancel: true
+      showCancel: true,
+      isDanger: false
     }
   }
 
-  const handleDeleteEvent = async (eventId) => {
-    try {
-      await eventService.deleteEvent(eventId)
-      setEventsList(prev => prev.filter(e => e.id !== eventId))
-      setSelectedEvent(null)
-    } catch (err) {
-      console.error('Error deleting event:', err)
-      setError('Failed to delete event')
-    }
+  const handleDeleteEvent = (eventId) => {
+    setPendingDeleteEventId(eventId)
+    setConfirmType('delete')
   }
 
   return (
     <div className="events-container">
       <Navbar />
       <h1 className="events-title">Upcoming Events</h1>
+      <p>Youth Enlightened empowers young people to create positive change in their communities through education, advocacy, and action. We host engaging workshops and events focused on real world issues like food insecurity, and we also encourage youth to step up and host their own workshops and initiatives to make an impact.</p>
+      <p>In partnership with Second Harvest, we raise awareness about food insecurity while helping students build practical skills such as coding, finance, marketing, and graphic design that they can use to advocate for solutions and support their communities.</p>
       {error && <div className="error-message">{error}</div>}
       {loading ? (
         <div className="loading-message">Loading events...</div>
@@ -373,6 +341,7 @@ const Events = () => {
         confirmLabel={getConfirmContent().confirmLabel}
         cancelLabel={getConfirmContent().cancelLabel}
         showCancel={getConfirmContent().showCancel}
+        isDanger={getConfirmContent().isDanger}
         onConfirm={handleConfirm}
         onCancel={handleCancelConfirm}
       />

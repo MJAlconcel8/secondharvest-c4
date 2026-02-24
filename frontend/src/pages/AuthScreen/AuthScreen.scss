@@ -63,16 +63,29 @@ $border-color: #d1d1d1;
       background-color: $input-bg;
       display: flex;
       flex-direction: column;
+      justify-content: flex-start;
+
+      .auth-logo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+
+        img {
+          height: 100px;
+          width: auto;
+          object-fit: contain;
+        }
+      }
 
       h2 {
         font-family: 'Playfair Display', serif;
         font-size: 2rem;
         color: $text-dark;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
       }
 
       .form-group {
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
         
         label {
           display: block;
@@ -98,7 +111,7 @@ $border-color: #d1d1d1;
         border: none;
         border-radius: 50px;
         cursor: pointer;
-        margin-top: 1.5rem;
+        margin-top: 1rem;
         font-weight: 600;
         transition: opacity 0.2s;
 
@@ -107,7 +120,7 @@ $border-color: #d1d1d1;
 
       .toggle-text {
         text-align: center;
-        margin-top: auto;
+        margin-top: 1.25rem;
         font-size: 0.9rem;
 
         button {
@@ -118,6 +131,28 @@ $border-color: #d1d1d1;
           cursor: pointer;
           color: $text-dark;
         }
+      }
+    }
+
+    .form-panel--register {
+      .auth-logo {
+        margin-bottom: 0.75rem;
+      }
+
+      h2 {
+        margin-bottom: 1rem;
+      }
+
+      .form-group {
+        margin-bottom: 0.7rem;
+      }
+
+      .submit-btn {
+        margin-top: 0.8rem;
+      }
+
+      .toggle-text {
+        margin-top: 1rem;
       }
     }
   }

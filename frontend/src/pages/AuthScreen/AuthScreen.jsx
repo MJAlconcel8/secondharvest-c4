@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import ErrorModal from '../../components/ErrorModal/ErrorModal';
 import { userService } from '../../services/userService';
+import logo from '../../assets/YouthEnlightened.svg';
 import './AuthScreen.scss';
 
 
@@ -106,7 +107,10 @@ const AuthScreen = () => {
         </div>
 
         {/* /* Left Side of Login/Signup Screen */}
-        <div className="form-panel">
+        <div className={`form-panel${isLogin ? '' : ' form-panel--register'}`}>
+          <div className="auth-logo">
+            <img src={logo} alt="Second Harvest Logo" />
+          </div>
           <h2>{isLogin ? "Log In" : "Create Account"}</h2>
           
           {message && <p className="status-message">{message}</p>}

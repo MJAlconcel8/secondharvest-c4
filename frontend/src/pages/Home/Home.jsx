@@ -94,7 +94,7 @@ const Home = () => {
             <p className="hero-lead">
               A warm, focused space to find events, plan your time, and grow awareness about
               food insecurity together. Inspired by Second Harvest Canada, our group is
-              committed to turning awareness into action.
+              committed to turning awareness into action. Build a Thriving World.
             </p>
             <div className="hero-actions">
               <NavLink to="/events" className="hero-btn hero-btn--primary">

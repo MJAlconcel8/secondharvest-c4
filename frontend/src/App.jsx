@@ -7,6 +7,7 @@ import AboutUs from './pages/AboutUs/AboutUs';
 import MeetTheTeam from './pages/MeetTheTeam/MeetTheTeam';
 import Events from './pages/Events/Events';
 import Calendar from './pages/Calendar/Calendar';
+import Footer from './components/Footer/Footer';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/events" element={<Events />} />
           <Route path="/calendar" element={<Calendar />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

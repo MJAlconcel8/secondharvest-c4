@@ -100,7 +100,7 @@ const AuthScreen = () => {
           <img src="/src/assets/forest-background.jpeg" alt="Forest" />
           <div className="hero-content">
             <h1>{isLogin ? "Welcome Back" : "Join Our Community"}</h1>
-            <p>{isLogin ? "Continue building a better future." : "Education. Advocacy. Action."}</p>
+            <p>{isLogin ? "Continue building a better future." : "Build a Thriving World."}</p>
             <span className="hero-footer text-xs mt-10 opacity-70">Safeguarding Earth's Resources.</span>
           </div>
         </div>

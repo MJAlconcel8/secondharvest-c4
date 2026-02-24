@@ -29,6 +29,9 @@ const AboutUs = () => {
           <p>
             That is how Youth Enlightened was formed. We wanted to empower high school students not only to understand food insecurity, but to take meaningful action. By combining awareness with hands on involvement and life skills such as coding, finance, and graphic design, we aim to create a generation of informed and capable changemakers who can advocate for food security while developing skills that will serve them far beyond this project.
           </p>
+          <p className="about-us-slogan">
+            Our slogan is Build a Thriving World.
+          </p>
       
       <div className="gallery-section">
         <h2>Highlights As a Team</h2>

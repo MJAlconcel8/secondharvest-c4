@@ -6,6 +6,7 @@ import SecondHarvest from './components/SecondHarvest/SecondHarvest';
 import AboutUs from './pages/AboutUs/AboutUs';
 import MeetTheTeam from './pages/MeetTheTeam/MeetTheTeam';
 import Events from './pages/Events/Events';
+import Calendar from './pages/Calendar/Calendar';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/meettheteam" element={<MeetTheTeam />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/calendar" element={<Calendar />} />
         </Routes>
       </div>
     </Router>

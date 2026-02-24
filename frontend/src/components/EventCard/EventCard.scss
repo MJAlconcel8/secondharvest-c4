@@ -79,4 +79,27 @@
     padding: 0.8rem;
     border-radius: 8px;
   }
+
+  .event-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: #2f5f2a;
+    font-weight: 600;
+  }
+
+  .event-card-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: #2f5f2a;
+    font-weight: 600;
+
+    strong {
+      font-weight: 700;
+      color: #1f3f1c;
+    }
+  }
 }

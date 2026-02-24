@@ -11,10 +11,12 @@ CREATE TABLE users (
 CREATE TABLE events (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    date DATE NOT NULL,
-    location VARCHAR(255),
+    event_name VARCHAR(255) NOT NULL,
+    event_image TEXT,
+    event_type VARCHAR(80) NOT NULL,
+    description TEXT NOT NULL,
+    host_name VARCHAR(255) NOT NULL,
+    event_date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_user
         FOREIGN KEY (user_id)

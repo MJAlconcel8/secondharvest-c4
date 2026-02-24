@@ -6,7 +6,9 @@ const EventEditModal = ({ event, onSubmit, onRequestClose, onDirtyChange }) => {
     eventName: '',
     eventImage: null,
     eventType: 'community',
-    description: ''
+    description: '',
+    hostName: '',
+    eventDate: ''
   })
   const [imagePreview, setImagePreview] = useState(null)
   const [formError, setFormError] = useState('')
@@ -14,7 +16,9 @@ const EventEditModal = ({ event, onSubmit, onRequestClose, onDirtyChange }) => {
     eventName: '',
     eventImage: null,
     eventType: 'community',
-    description: ''
+    description: '',
+    hostName: '',
+    eventDate: ''
   })
   const initialImageRef = useRef(null)
 
@@ -24,7 +28,9 @@ const EventEditModal = ({ event, onSubmit, onRequestClose, onDirtyChange }) => {
         eventName: event.eventName || '',
         eventImage: event.eventImage || null,
         eventType: event.eventType || 'community',
-        description: event.description || ''
+        description: event.description || '',
+        hostName: event.hostName || '',
+        eventDate: event.eventDate || ''
       }
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData(normalizedEvent)
@@ -44,6 +50,8 @@ const EventEditModal = ({ event, onSubmit, onRequestClose, onDirtyChange }) => {
       formData.eventName.trim() !== initialForm.eventName.trim() ||
       formData.eventType !== initialForm.eventType ||
       formData.description.trim() !== initialForm.description.trim() ||
+      formData.hostName.trim() !== initialForm.hostName.trim() ||
+      formData.eventDate.trim() !== initialForm.eventDate.trim() ||
       imagePreview !== initialImageRef.current
     onDirtyChange(isDirty)
   }, [formData, imagePreview, onDirtyChange])
@@ -80,7 +88,9 @@ const EventEditModal = ({ event, onSubmit, onRequestClose, onDirtyChange }) => {
     e.preventDefault()
     const trimmedName = formData.eventName.trim()
     const trimmedDescription = formData.description.trim()
-    if (!trimmedName || !trimmedDescription) {
+    const trimmedHost = formData.hostName.trim()
+    const trimmedDate = formData.eventDate.trim()
+    if (!trimmedName || !trimmedDescription || !trimmedHost || !trimmedDate) {
       setFormError('Please fill out all required fields before saving changes.')
       return
     }
@@ -90,7 +100,9 @@ const EventEditModal = ({ event, onSubmit, onRequestClose, onDirtyChange }) => {
       eventName: trimmedName,
       eventImage: finalImageUrl,
       eventType: formData.eventType,
-      description: trimmedDescription
+      description: trimmedDescription,
+      hostName: trimmedHost,
+      eventDate: trimmedDate
     }
     onSubmit(updatedEvent)
   }
@@ -121,6 +133,31 @@ const EventEditModal = ({ event, onSubmit, onRequestClose, onDirtyChange }) => {
             value={formData.eventName}
             onChange={handleInputChange}
             placeholder="Enter event name"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="hostName">Host Name</label>
+          <input
+            type="text"
+            id="hostName"
+            name="hostName"
+            value={formData.hostName}
+            onChange={handleInputChange}
+            placeholder="Enter host name"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="eventDate">Event Date</label>
+          <input
+            type="date"
+            id="eventDate"
+            name="eventDate"
+            value={formData.eventDate}
+            onChange={handleInputChange}
             required
           />
         </div>

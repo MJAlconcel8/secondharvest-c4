@@ -98,6 +98,19 @@
         letter-spacing: 0.01em;
         text-transform: capitalize;
       }
+
+      .event-detail-info {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.45rem 0.85rem;
+        border-radius: 18px;
+        background: rgba(123, 182, 97, 0.12);
+        color: #2f5f2a;
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        letter-spacing: 0.01em;
+      }
     }
 
     .event-detail-description {

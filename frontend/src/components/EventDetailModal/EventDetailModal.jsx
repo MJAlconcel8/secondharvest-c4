@@ -1,6 +1,21 @@
 import React from 'react'
 import './EventDetailModal.scss'
 
+const formatEventDate = (value) => {
+  if (!value) {
+    return ''
+  }
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) {
+    return value
+  }
+  return parsed.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  })
+}
+
 const EventDetailModal = ({ event, onClose, onEdit, onDelete }) => {
   const handleModalClick = (e) => {
     e.stopPropagation()
@@ -25,9 +40,17 @@ const EventDetailModal = ({ event, onClose, onEdit, onDelete }) => {
       <div className="event-detail-content">
         <h2 className="event-detail-name">{event.eventName}</h2>
         
-        {event.eventType && (
+        {(event.eventType || event.hostName || event.eventDate) && (
           <div className="event-detail-meta">
-            <span className="event-type-badge">{event.eventType}</span>
+            {event.eventType && (
+              <span className="event-type-badge">{event.eventType}</span>
+            )}
+            {event.hostName && (
+              <span className="event-detail-info">Hosted by {event.hostName}</span>
+            )}
+            {event.eventDate && (
+              <span className="event-detail-info">{formatEventDate(event.eventDate)}</span>
+            )}
           </div>
         )}
 

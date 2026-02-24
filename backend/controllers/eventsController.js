@@ -1,12 +1,23 @@
 const pool = require('../config/userConfig');
 
 const createEvent = async (req, res) => {
-    const {name, date, location, description} = req.body;
+    const { userId, eventName, eventImage, eventType, description, hostName, eventDate } = req.body;
 
     try {
         const newEvent = await pool.query(
-            'INSERT INTO events (name, date, location, description) VALUES ($1, $2, $3, $4) RETURNING *',
-            [name, date, location, description]
+                        `INSERT INTO events (user_id, event_name, event_image, event_type, description, host_name, event_date)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7)
+             RETURNING
+               id,
+                             user_id AS "userId",
+               event_name AS "eventName",
+               event_image AS "eventImage",
+               event_type AS "eventType",
+               description,
+               host_name AS "hostName",
+               event_date AS "eventDate",
+               created_at AS "createdAt"`,
+                        [userId, eventName, eventImage, eventType, description, hostName, eventDate]
         );
 
         res.json(newEvent.rows[0]);
@@ -18,7 +29,20 @@ const createEvent = async (req, res) => {
 
 const getEvents = async (req, res) => {
     try {
-        const events = await pool.query('SELECT * FROM events');
+        const events = await pool.query(
+            `SELECT
+               id,
+               user_id AS "userId",
+               event_name AS "eventName",
+               event_image AS "eventImage",
+               event_type AS "eventType",
+               description,
+               host_name AS "hostName",
+               event_date AS "eventDate",
+               created_at AS "createdAt"
+             FROM events
+             ORDER BY event_date ASC`
+        );
         res.json(events.rows);
     } catch (err) {
         console.error(err.message);
@@ -30,7 +54,21 @@ const getEventById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const event = await pool.query('SELECT * FROM events WHERE id = $1', [id]);
+        const event = await pool.query(
+            `SELECT
+               id,
+               user_id AS "userId",
+               event_name AS "eventName",
+               event_image AS "eventImage",
+               event_type AS "eventType",
+               description,
+               host_name AS "hostName",
+               event_date AS "eventDate",
+               created_at AS "createdAt"
+             FROM events
+             WHERE id = $1`,
+            [id]
+        );
 
         if (event.rows.length > 0) {
             res.json(event.rows[0]);
@@ -45,12 +83,30 @@ const getEventById = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     const { id } = req.params;
-    const { name, date, location, description } = req.body;
+    const { userId, eventName, eventImage, eventType, description, hostName, eventDate } = req.body;
 
     try {
         const updatedEvent = await pool.query(
-            'UPDATE events SET name = $1, date = $2, location = $3, description = $4 WHERE id = $5 RETURNING *',
-            [name, date, location, description, id]
+            `UPDATE events
+             SET user_id = $1,
+                 event_name = $2,
+                 event_image = $3,
+                 event_type = $4,
+                 description = $5,
+                 host_name = $6,
+                 event_date = $7
+             WHERE id = $8
+             RETURNING
+               id,
+               user_id AS "userId",
+               event_name AS "eventName",
+               event_image AS "eventImage",
+               event_type AS "eventType",
+               description,
+               host_name AS "hostName",
+               event_date AS "eventDate",
+               created_at AS "createdAt"`,
+            [userId, eventName, eventImage, eventType, description, hostName, eventDate, id]
         );
 
         if (updatedEvent.rows.length > 0) {

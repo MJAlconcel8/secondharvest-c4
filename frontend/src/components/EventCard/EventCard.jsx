@@ -8,7 +8,31 @@ const formatEventType = (value) => {
   return value.replace(/(^|\s|-)\S/g, (match) => match.toUpperCase())
 }
 
-const EventCard = ({ eventName, eventImage, eventType, description, color, onClick }) => {
+const formatEventDate = (value) => {
+  if (!value) {
+    return ''
+  }
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) {
+    return value
+  }
+  return parsed.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
+}
+
+const EventCard = ({
+  eventName,
+  eventImage,
+  eventType,
+  description,
+  hostName,
+  eventDate,
+  color,
+  onClick
+}) => {
   return (
     <div
       className="event-card"
@@ -21,6 +45,20 @@ const EventCard = ({ eventName, eventImage, eventType, description, color, onCli
       <div className="event-card-content">
         <h3 className="event-card-name">{eventName}</h3>
         {eventType && <span className="event-card-type">{formatEventType(eventType)}</span>}
+        {(hostName || eventDate) && (
+          <div className="event-card-meta">
+            {hostName && (
+              <span className="event-card-meta-item">
+                Hosted by <strong>{hostName}</strong>
+              </span>
+            )}
+            {eventDate && (
+              <span className="event-card-meta-item">
+                {formatEventDate(eventDate)}
+              </span>
+            )}
+          </div>
+        )}
         <p className="event-card-description">{description}</p>
       </div>
     </div>

@@ -23,6 +23,8 @@ const Events = () => {
       eventImage: 'https://images.unsplash.com/photo-1532996122724-8f3c2cd83c5d?w=500&h=500&fit=crop',
       eventType: 'food',
       description: 'Join us for our annual food drive to help feed families in need. Volunteers welcome!',
+      hostName: 'Second Harvest Team',
+      eventDate: '2026-03-12',
       color: '#7BB661'
     },
     {
@@ -31,6 +33,8 @@ const Events = () => {
       eventImage: 'https://images.unsplash.com/photo-1488521787991-3e169b3f44b5?w=500&h=500&fit=crop',
       eventType: 'community',
       description: 'Help us harvest fresh produce from our community garden and distribute to local families.',
+      hostName: 'Neighborhood Growers',
+      eventDate: '2026-03-22',
       color: '#5A9D4D'
     },
     {
@@ -39,6 +43,8 @@ const Events = () => {
       eventImage: 'https://images.unsplash.com/photo-1556195332-39a4ee5f1b59?w=500&h=500&fit=crop',
       eventType: 'cooking',
       description: 'Learn healthy cooking techniques with our expert chefs. Free for all community members.',
+      hostName: 'Chef Elena Rivera',
+      eventDate: '2026-04-05',
       color: '#7BB661'
     },
     {
@@ -47,6 +53,8 @@ const Events = () => {
       eventImage: 'https://images.unsplash.com/photo-1559027615-cd2628902d4a?w=500&h=500&fit=crop',
       eventType: 'fundraiser',
       description: 'Bring non-perishable items, clothing, and household goods to support our mission.',
+      hostName: 'Community Partners',
+      eventDate: '2026-04-18',
       color: '#5A9D4D'
     },
     {
@@ -55,6 +63,8 @@ const Events = () => {
       eventImage: 'https://images.unsplash.com/photo-1559027615-cd2628902d4a?w=500&h=500&fit=crop',
       eventType: 'community',
       description: 'Together we can make a difference. Sign up to volunteer at our distribution center.',
+      hostName: 'Volunteer Hub',
+      eventDate: '2026-05-02',
       color: '#7BB661'
     },
     {
@@ -63,6 +73,8 @@ const Events = () => {
       eventImage: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&h=500&fit=crop',
       eventType: 'education',
       description: 'Fun and educational program teaching children about healthy eating habits.',
+      hostName: 'Second Harvest Educators',
+      eventDate: '2026-05-19',
       color: '#5A9D4D'
     }
   ])
@@ -220,6 +232,8 @@ const Events = () => {
             eventImage={event.eventImage}
             eventType={event.eventType}
             description={event.description}
+            hostName={event.hostName}
+            eventDate={event.eventDate}
             color={event.color}
             onClick={() => handleCardClick(event)}
           />

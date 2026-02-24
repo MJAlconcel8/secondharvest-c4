@@ -6,7 +6,9 @@ const EventFormModal = ({ onSubmit, onRequestClose, onDirtyChange, onInvalidSubm
     eventName: '',
     eventImage: null,
     eventType: 'community',
-    description: ''
+    description: '',
+    hostName: '',
+    eventDate: ''
   })
   const [imagePreview, setImagePreview] = useState(null)
 
@@ -42,6 +44,8 @@ const EventFormModal = ({ onSubmit, onRequestClose, onDirtyChange, onInvalidSubm
       formData.eventName.trim() !== '' ||
       formData.description.trim() !== '' ||
       formData.eventType !== 'community' ||
+      formData.hostName.trim() !== '' ||
+      formData.eventDate.trim() !== '' ||
       Boolean(imagePreview)
     )
   }
@@ -56,7 +60,9 @@ const EventFormModal = ({ onSubmit, onRequestClose, onDirtyChange, onInvalidSubm
     e.preventDefault()
     const trimmedName = formData.eventName.trim()
     const trimmedDescription = formData.description.trim()
-    if (!trimmedName || !trimmedDescription) {
+    const trimmedHost = formData.hostName.trim()
+    const trimmedDate = formData.eventDate.trim()
+    if (!trimmedName || !trimmedDescription || !trimmedHost || !trimmedDate) {
       if (onInvalidSubmit) {
         onInvalidSubmit('Please fill out all required fields before creating the event.')
       }
@@ -69,6 +75,8 @@ const EventFormModal = ({ onSubmit, onRequestClose, onDirtyChange, onInvalidSubm
       eventImage: finalImageUrl,
       eventType: formData.eventType,
       description: trimmedDescription,
+      hostName: trimmedHost,
+      eventDate: trimmedDate,
       color: '#7BB661'
     }
     onSubmit(newEvent)
@@ -100,6 +108,31 @@ const EventFormModal = ({ onSubmit, onRequestClose, onDirtyChange, onInvalidSubm
             value={formData.eventName}
             onChange={handleInputChange}
             placeholder="Enter event name"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="hostName">Host Name</label>
+          <input
+            type="text"
+            id="hostName"
+            name="hostName"
+            value={formData.hostName}
+            onChange={handleInputChange}
+            placeholder="Enter host name"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="eventDate">Event Date</label>
+          <input
+            type="date"
+            id="eventDate"
+            name="eventDate"
+            value={formData.eventDate}
+            onChange={handleInputChange}
             required
           />
         </div>

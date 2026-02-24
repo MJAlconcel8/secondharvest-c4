@@ -88,6 +88,7 @@
 
     input[type="text"],
     input[type="url"],
+    input[type="date"],
     select,
     textarea {
       padding: 0.8rem 1rem;
@@ -108,6 +109,21 @@
 
       &::placeholder {
         color: #999;
+      }
+    }
+
+    input[type="date"] {
+      color-scheme: light;
+
+      &::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        opacity: 0.7;
+        filter: grayscale(100%);
+        transition: opacity 0.2s ease;
+      }
+
+      &::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
       }
     }
 

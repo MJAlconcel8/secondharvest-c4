@@ -7,10 +7,10 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import SecondHarvest1 from '../../assets/secondharvest1.jpeg';
-import SecondHarvest2 from '../../assets/secondharvest2.jpg';
-import SecondHarvest3 from '../../assets/secondharvest3.jpg';
-import SecondHarvest4 from '../../assets/secondharvest4.jpeg';
+import SecondHarvest1 from '../../assets/SecondHarvest1.jpeg';
+import SecondHarvest2 from '../../assets/SecondHarvest2.jpg';
+import SecondHarvest3 from '../../assets/SecondHarvest3.jpg';
+import SecondHarvest4 from '../../assets/SecondHarvest4.jpeg';
 
 const SecondHarvest = () => {
   return (

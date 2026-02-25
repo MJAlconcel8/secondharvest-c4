@@ -1,4 +1,6 @@
-const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user`;
+import { api } from '../config/environment';
+
+const API_BASE_URL = api.user;
 
 export const userService = {
   // Register new user

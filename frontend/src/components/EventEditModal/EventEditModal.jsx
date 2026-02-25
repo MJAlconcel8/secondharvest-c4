@@ -81,13 +81,17 @@ const EventEditModal = ({ event, onSubmit, onRequestClose, onDirtyChange }) => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
     if (file) {
-      setFormData(prev => ({
-        ...prev,
-        eventImage: file
-      }))
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result)
+        const base64String = reader.result
+        setFormData(prev => ({
+          ...prev,
+          eventImage: base64String
+        }))
+        setImagePreview(base64String)
+      }
+      reader.onerror = () => {
+        console.error('Error reading file')
       }
       reader.readAsDataURL(file)
     }

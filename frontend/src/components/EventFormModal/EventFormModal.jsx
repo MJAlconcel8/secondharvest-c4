@@ -23,13 +23,17 @@ const EventFormModal = ({ onSubmit, onRequestClose, onDirtyChange, onInvalidSubm
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
     if (file) {
-      setFormData(prev => ({
-        ...prev,
-        eventImage: file
-      }))
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result)
+        const base64String = reader.result
+        setFormData(prev => ({
+          ...prev,
+          eventImage: base64String
+        }))
+        setImagePreview(base64String)
+      }
+      reader.onerror = () => {
+        console.error('Error reading file')
       }
       reader.readAsDataURL(file)
     }
@@ -80,6 +84,15 @@ const EventFormModal = ({ onSubmit, onRequestClose, onDirtyChange, onInvalidSubm
       color: '#7BB661'
     }
     onSubmit(newEvent)
+    setFormData({
+      eventName: '',
+      eventImage: null,
+      eventType: 'community',
+      description: '',
+      hostName: '',
+      eventDate: ''
+    })
+    setImagePreview(null)
   }
 
   const handleModalClick = (e) => {

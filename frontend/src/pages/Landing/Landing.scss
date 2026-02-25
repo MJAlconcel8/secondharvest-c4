@@ -1,0 +1,145 @@
+.landing {
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: #f9f5f0;
+  color: #2d3e2f;
+}
+
+.landing__hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 6vw;
+  overflow: hidden;
+}
+
+.landing__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.85);
+}
+
+.landing__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(249, 245, 240, 0.92), rgba(249, 245, 240, 0.75));
+}
+
+.landing__content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  background: rgba(249, 245, 240, 0.85);
+  padding: 2.5rem 2.8rem;
+  border-radius: 20px;
+  box-shadow: 0 16px 32px rgba(36, 74, 47, 0.12);
+}
+
+.landing__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.landing__logo {
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+}
+
+.landing__slogan {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0;
+  color: #244a2f;
+}
+
+.landing__content h1 {
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.landing__content p {
+  font-size: 1.1rem;
+  margin: 0;
+  line-height: 1.7;
+  color: #3a3a3a;
+}
+
+.landing__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.landing__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.8rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.landing__btn--primary {
+  background: #6fc13e;
+  color: #0f1a12;
+  box-shadow: 0 10px 22px rgba(36, 74, 47, 0.2);
+}
+
+.landing__btn--ghost {
+  border: 2px solid rgba(36, 74, 47, 0.4);
+  color: #244a2f;
+  background: #f9f5f0;
+}
+
+.landing__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(36, 74, 47, 0.18);
+}
+
+.landing__partner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.landing__partner-logo {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 700px) {
+  .landing__hero {
+    padding: 4rem 8vw;
+  }
+
+  .landing__content {
+    padding: 2rem 2.2rem;
+  }
+
+  .landing__logo {
+    height: 64px;
+  }
+
+  .landing__partner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

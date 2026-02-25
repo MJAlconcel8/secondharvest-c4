@@ -16,12 +16,36 @@ const Events = () => {
   const [isEditDirty, setIsEditDirty] = useState(false)
   const [confirmType, setConfirmType] = useState(null)
   const [pendingCreateEvent, setPendingCreateEvent] = useState(null)
+  const [pendingEditEvent, setPendingEditEvent] = useState(null)
   const [pendingDeleteEventId, setPendingDeleteEventId] = useState(null)
   const [confirmMessage, setConfirmMessage] = useState('')
 
   const [eventsList, setEventsList] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+  const currentUserId = currentUser.id
+
+  const getDefaultImageUrl = () => {
+    return 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&h=500&fit=crop&q=80'
+  }
+
+  const ensureEventHasImage = (event) => {
+    // Check localStorage first for uploaded images
+    const storedImage = localStorage.getItem(`event-image-${event.id}`)
+    return {
+      ...event,
+      eventImage: event.eventImage || storedImage || getDefaultImageUrl()
+    }
+  }
+
+  const saveEventImage = (eventId, imageUrl) => {
+    // Only store if it's a data URL (uploaded image)
+    if (imageUrl && imageUrl.startsWith('data:')) {
+      localStorage.setItem(`event-image-${eventId}`, imageUrl)
+    }
+  }
 
   // Fetch events on component mount
   useEffect(() => {
@@ -31,10 +55,12 @@ const Events = () => {
         setError(null)
         const events = await eventService.getEvents()
         if (events && events.length > 0) {
-          // Deduplicate events by ID
-          const uniqueEvents = events.filter((event, index, self) =>
-            index === self.findIndex((e) => e.id === event.id)
-          )
+          // Deduplicate events by ID and ensure each has an image
+          const uniqueEvents = events
+            .filter((event, index, self) =>
+              index === self.findIndex((e) => e.id === event.id)
+            )
+            .map(ensureEventHasImage)
           setEventsList(uniqueEvents)
         }
       } catch (err) {
@@ -68,7 +94,7 @@ const Events = () => {
   }
 
   const handleCardClick = (event) => {
-    setSelectedEvent(event)
+    setSelectedEvent(ensureEventHasImage(event))
   }
 
   const handleCloseDetailModal = () => {
@@ -76,33 +102,18 @@ const Events = () => {
   }
 
   const handleEditEvent = (event) => {
-    setSelectedEvent(event)
+    if (!currentUserId || event.userId !== currentUserId) {
+      setError('You can only edit your own events')
+      return
+    }
+    setSelectedEvent(ensureEventHasImage(event))
     setIsEditModalOpen(true)
   }
 
   const handleSubmitEditModal = async (updatedEvent) => {
     if (updatedEvent) {
-      try {
-        const user = JSON.parse(localStorage.getItem('user') || '{}')
-        // Only send fields that the backend expects
-        const eventData = {
-          userId: user.id || 1,
-          eventName: updatedEvent.eventName,
-          eventType: updatedEvent.eventType,
-          description: updatedEvent.description,
-          hostName: updatedEvent.hostName,
-          eventDate: updatedEvent.eventDate
-        }
-        const result = await eventService.updateEvent(updatedEvent.id, eventData)
-        const updatedEventWithImage = { ...result, eventImage: updatedEvent.eventImage }
-        setEventsList(prev => prev.map(e => e.id === result.id ? updatedEventWithImage : e))
-        setSelectedEvent(updatedEventWithImage)
-        setIsEditModalOpen(false)
-        setIsEditDirty(false)
-      } catch (err) {
-        console.error('Error updating event:', err)
-        setError('Failed to update event')
-      }
+      setPendingEditEvent(updatedEvent)
+      setConfirmType('edit-submit')
     }
   }
 
@@ -124,9 +135,39 @@ const Events = () => {
       setIsEditModalOpen(false)
       setIsEditDirty(false)
     }
+    if (confirmType === 'edit-submit' && pendingEditEvent) {
+      try {
+        // Only send fields that the backend expects
+        const eventData = {
+          eventName: pendingEditEvent.eventName,
+          eventType: pendingEditEvent.eventType,
+          description: pendingEditEvent.description,
+          hostName: pendingEditEvent.hostName,
+          eventDate: pendingEditEvent.eventDate
+        }
+        const result = await eventService.updateEvent(pendingEditEvent.id, eventData)
+        const updatedEventWithImage = ensureEventHasImage({ 
+          ...result, 
+          eventImage: pendingEditEvent.eventImage 
+        })
+        // Save image to localStorage for persistence
+        saveEventImage(updatedEventWithImage.id, updatedEventWithImage.eventImage)
+        setEventsList(prev => prev.map(e => e.id === result.id ? updatedEventWithImage : e))
+        setIsEditModalOpen(false)
+        setIsEditDirty(false)
+        setSelectedEvent(null)
+        setPendingEditEvent(null)
+      } catch (err) {
+        console.error('Error updating event:', err)
+        setConfirmMessage('Failed to save changes. Please try again.')
+        setConfirmType('error')
+        return
+      }
+    }
     if (confirmType === 'delete' && pendingDeleteEventId) {
       try {
         await eventService.deleteEvent(pendingDeleteEventId)
+        localStorage.removeItem(`event-image-${pendingDeleteEventId}`)
         setEventsList(prev => prev.filter(e => e.id !== pendingDeleteEventId))
         setSelectedEvent(null)
         setPendingDeleteEventId(null)
@@ -139,10 +180,8 @@ const Events = () => {
     }
     if (confirmType === 'create-submit' && pendingCreateEvent) {
       try {
-        const user = JSON.parse(localStorage.getItem('user') || '{}')
         // Only send fields that the backend expects
         const eventData = {
-          userId: user.id || 1,
           eventName: pendingCreateEvent.eventName,
           eventType: pendingCreateEvent.eventType,
           description: pendingCreateEvent.description,
@@ -154,6 +193,8 @@ const Events = () => {
           ...newEvent,
           eventImage: pendingCreateEvent.eventImage
         }
+        // Save image to localStorage for persistence
+        saveEventImage(eventWithImage.id, eventWithImage.eventImage)
         // Add new event and ensure no duplicates
         setEventsList(prev => {
           const filtered = prev.filter(e => e.id !== eventWithImage.id)
@@ -175,6 +216,7 @@ const Events = () => {
   const handleCancelConfirm = () => {
     setConfirmType(null)
     setPendingCreateEvent(null)
+    setPendingEditEvent(null)
     setPendingDeleteEventId(null)
     setConfirmMessage('')
   }
@@ -190,6 +232,16 @@ const Events = () => {
         title: 'Create Event',
         message: `Create "${pendingCreateEvent?.eventName || 'this event'}"?`,
         confirmLabel: 'Create',
+        cancelLabel: 'Cancel',
+        showCancel: true,
+        isDanger: false
+      }
+    }
+    if (confirmType === 'edit-submit') {
+      return {
+        title: 'Save Changes',
+        message: `Save changes to "${pendingEditEvent?.eventName || 'this event'}"?`,
+        confirmLabel: 'Save',
         cancelLabel: 'Cancel',
         showCancel: true,
         isDanger: false
@@ -267,6 +319,11 @@ const Events = () => {
   }
 
   const handleDeleteEvent = (eventId) => {
+    const eventToDelete = eventsList.find(e => e.id === eventId)
+    if (!currentUserId || eventToDelete?.userId !== currentUserId) {
+      setError('You can only delete your own events')
+      return
+    }
     setPendingDeleteEventId(eventId)
     setConfirmType('delete')
   }
@@ -321,6 +378,7 @@ const Events = () => {
             onClose={handleCloseDetailModal}
             onEdit={handleEditEvent}
             onDelete={handleDeleteEvent}
+            canEdit={Boolean(currentUserId) && selectedEvent.userId === currentUserId}
           />
         </div>
       )}

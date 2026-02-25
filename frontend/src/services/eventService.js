@@ -1,5 +1,13 @@
 const API_BASE_URL = 'http://localhost:5000/api/events';
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return {};
+  }
+  return { Authorization: `Bearer ${token}` };
+};
+
 export const eventService = {
   // Get all events
   async getEvents() {
@@ -45,7 +53,8 @@ export const eventService = {
       const response = await fetch(API_BASE_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
         },
         body: JSON.stringify(eventData)
       });
@@ -65,7 +74,8 @@ export const eventService = {
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
         },
         body: JSON.stringify(eventData)
       });
@@ -85,7 +95,8 @@ export const eventService = {
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
         }
       });
       if (!response.ok) {

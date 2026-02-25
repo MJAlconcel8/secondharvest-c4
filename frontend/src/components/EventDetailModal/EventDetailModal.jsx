@@ -16,7 +16,7 @@ const formatEventDate = (value) => {
   })
 }
 
-const EventDetailModal = ({ event, onClose, onEdit, onDelete }) => {
+const EventDetailModal = ({ event, onClose, onEdit, onDelete, canEdit }) => {
   const handleModalClick = (e) => {
     e.stopPropagation()
   }
@@ -57,14 +57,16 @@ const EventDetailModal = ({ event, onClose, onEdit, onDelete }) => {
           <p>{event.description}</p>
         </div>
 
-        <div className="event-detail-actions">
-          <button className="btn btn-secondary" onClick={() => onEdit(event)}>
-            Edit
-          </button>
-          <button className="btn btn-danger" onClick={handleDelete}>
-            Delete
-          </button>
-        </div>
+        {canEdit && (
+          <div className="event-detail-actions">
+            <button className="btn btn-secondary" onClick={() => onEdit(event)}>
+              Edit
+            </button>
+            <button className="btn btn-danger" onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

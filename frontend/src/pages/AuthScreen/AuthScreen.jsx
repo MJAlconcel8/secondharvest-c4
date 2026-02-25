@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import ErrorModal from '../../components/ErrorModal/ErrorModal';
 import { userService } from '../../services/userService';
@@ -19,6 +19,19 @@ const AuthScreen = () => {
   const [modal, setModal] = useState({ show: false, message: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const mode = params.get('mode');
+
+    if (mode === 'register') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsLogin(false);
+    } else if (mode === 'login') {
+      setIsLogin(true);
+    }
+  }, [location.search]);
 
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

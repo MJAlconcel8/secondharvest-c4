@@ -1,17 +1,18 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
 const pool = require('./config/userConfig');
 const userRoutes = require('./routes/userRoutes');
 const eventsRoutes = require('./routes/eventsRoutes');
-const environment = require('./config/environment');
 
 const app = express();
 
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,https://secondharvest-c4.onrender.com').split(',');
 app.use(cors({
     origin: function(origin, callback) {
         // allow requests with no origin (like mobile apps, curl, etc.)
         if (!origin) return callback(null, true);
-        if (environment.CORS_ORIGIN.includes(origin)) {
+        if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         } else {
             return callback(new Error('Not allowed by CORS'), false);
@@ -38,7 +39,8 @@ pool.query('SELECT NOW()', (err, res) => {
 app.use('/api/user', userRoutes);
 app.use('/api/events', eventsRoutes);
 
-app.listen(environment.PORT, () => {
-    console.log(`Server is running on port ${environment.PORT} in ${environment.NODE_ENV} mode`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 

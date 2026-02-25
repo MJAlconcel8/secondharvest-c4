@@ -7,7 +7,7 @@ const eventsRoutes = require('./routes/eventsRoutes');
 
 const app = express();
 
-const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',');
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,https://secondharvest-c4.onrender.com').split(',');
 app.use(cors({
     origin: function(origin, callback) {
         // allow requests with no origin (like mobile apps, curl, etc.)

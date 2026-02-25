@@ -4,6 +4,7 @@ import Button from '../../components/Button/Button';
 import ErrorModal from '../../components/ErrorModal/ErrorModal';
 import { userService } from '../../services/userService';
 import logo from '../../assets/YouthEnlightened.svg';
+import forestBackground from '../../assets/forest-background.jpeg';
 import './AuthScreen.scss';
 
 
@@ -111,7 +112,7 @@ const AuthScreen = () => {
         
         {/* Left Side of Login/Signup Screen */}
         <div className="hero-panel">
-          <img src="/src/assets/forest-background.jpeg" alt="Forest" />
+          <img src={forestBackground} alt="Forest" />
           <div className="hero-content">
             <h1>{isLogin ? "Welcome Back" : "Join Our Community"}</h1>
             <p>{isLogin ? "Continue building a better future." : "Build a Thriving World."}</p>

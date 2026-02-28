@@ -25,9 +25,19 @@ const Calendar = () => {
         setError(null)
         const events = await eventService.getEvents()
         if (events && events.length > 0) {
+          const getDefaultImageUrl = () => {
+            return 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&h=500&fit=crop&q=80'
+          }
+          const ensureEventHasImage = (event) => {
+            const storedImage = localStorage.getItem(`event-image-${event.id}`)
+            return {
+              ...event,
+              eventImage: event.eventImage || storedImage || getDefaultImageUrl()
+            }
+          }
           const uniqueEvents = events.filter((event, index, self) =>
             index === self.findIndex((e) => e.id === event.id)
-          )
+          ).map(ensureEventHasImage)
           setEventsList(uniqueEvents)
         }
       } catch (err) {

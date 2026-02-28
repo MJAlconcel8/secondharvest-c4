@@ -4,7 +4,19 @@ import Navbar from '../../components/Navbar/Navbar'
 import EventCard from '../../components/EventCard/EventCard'
 import { eventService } from '../../services/eventService'
 import heroImage from '../../assets/SecondHarvest1.jpeg'
-import fallbackEventImage from '../../assets/volunteering.jpg'
+
+// Use the same logic as Events page to get the correct image
+const getDefaultImageUrl = () => {
+  return 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&h=500&fit=crop&q=80'
+}
+
+const ensureEventHasImage = (event) => {
+  const storedImage = localStorage.getItem(`event-image-${event.id}`)
+  return {
+    ...event,
+    eventImage: event.eventImage || storedImage || getDefaultImageUrl()
+  }
+}
 import './Home.scss'
 
 const Home = () => {
@@ -43,6 +55,7 @@ const Home = () => {
         }
         return parsed.getMonth() === month && parsed.getFullYear() === year
       })
+      .map(ensureEventHasImage)
       .sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate))
       .slice(0, 6)
   }, [events, now])
@@ -187,7 +200,7 @@ const Home = () => {
                   description={event.description}
                   hostName={event.hostName}
                   eventDate={event.eventDate}
-                  eventImage={event.eventImage || fallbackEventImage}
+                  eventImage={event.eventImage}
                   onClick={() => navigate('/events')}
                 />
               ))}

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import AuthScreen from './pages/AuthScreen/AuthScreen';
 import Landing from './pages/Landing/Landing';
 import Home from './pages/Home/Home';
-import SecondHarvest from './components/SecondHarvest/SecondHarvest';
+import SecondHarvest from './pages/SecondHarvest/SecondHarvest';
 import AboutUs from './pages/AboutUs/AboutUs';
 import MeetTheTeam from './pages/MeetTheTeam/MeetTheTeam';
 import Events from './pages/Events/Events';

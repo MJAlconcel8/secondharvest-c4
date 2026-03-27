@@ -1,6 +1,7 @@
 import React from 'react';
 import './AboutUs.scss';
 import Navbar from '../../components/Navbar/Navbar';
+import Button from '../../components/Button/Button';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -32,6 +33,18 @@ const AboutUs = () => {
           <p className="about-us-slogan">
             Our slogan is Build a Thriving World.
           </p>
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '24px 0' }}>
+            <a
+              href="https://fundraise.secondharvest.ca/fundraisers/YouthEnlightened/youth-enlightened-financial-literacy-workshop"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none' }}
+            >
+              <Button variant="primary" style={{ fontSize: '1.1rem', padding: '12px 32px' }}>
+                Support Youth Enlightened, all proceeds go towards funding our workshops and food rescue efforts and Second Harvest's mission to end food insecurity in Canada.
+              </Button>
+            </a>
+          </div>
       
       <div className="gallery-section">
         <h2>Highlights As a Team</h2>

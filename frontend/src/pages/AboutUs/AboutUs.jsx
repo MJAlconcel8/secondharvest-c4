@@ -41,7 +41,7 @@ const AboutUs = () => {
               style={{ textDecoration: 'none' }}
             >
               <Button variant="primary" style={{ fontSize: '1.1rem', padding: '12px 32px' }}>
-                Support Youth Enlightened, all proceeds go towards funding our workshops and food rescue efforts and Second Harvest's mission to end food insecurity in Canada.
+                Support Youth Enlightened
               </Button>
             </a>
           </div>
